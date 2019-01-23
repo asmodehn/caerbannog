@@ -19,10 +19,11 @@ class PenState(enum.Enum):
 # Additionally is serves us as a simulation without relying on any side effects.
 #
 # note that doing so we already, in a way, separated the "model" from the actual "implementation code".
+# We reuse here turtle.Vec2D to get exactly the same code representing the model, and what is actually happening.
 class SimTurtle:
 
-    currentPosition = (0, 0)
-    currentAngle = 0.0
+    currentPosition = turtle.Vec2D(0, 0)
+    currentAttitude = turtle.Vec2D(1, 0)  # Represents an angle in a nice computable way
     currentPenState = PenState.DOWN
     #: the list of lines drawn, as the expected side effect.
     drawing = []
@@ -32,7 +33,7 @@ class SimTurtle:
     def move(self, distance: int):
         logging.info("simulating move {0}".format(distance))
 
-        endPosition = (self.currentPosition[0] + distance * math.cos(self.currentAngle), self.currentPosition[1] + distance * math.sin(self.currentAngle) )
+        endPosition = self.currentPosition + distance * self.currentAttitude
 
         if self.currentPenState == PenState.DOWN:
             self.drawing.append((self.currentPosition, endPosition))
@@ -42,9 +43,7 @@ class SimTurtle:
     def turn(self, angle: int):
         logging.info("simulating turn {0} degree".format(angle))
 
-        newAngle = self.currentAngle + angle
-
-        self.currentAngle = newAngle
+        self.currentAttitude = self.currentAttitude.rotate(angle)
 
     def penup(self):
         logging.info("simulating pen UP")
@@ -75,8 +74,20 @@ class InteractiveTurtle(turtle.Turtle):
 
     # abasic comparison function to make sure our model stays on track...
     def _compare_model(self):
-        assert self.model.currentPosition == self.position(), f"Model position {self.model.currentPosition} inconsistent with reality : {self.position()}"
-        assert self.model.currentAngle % 360 == self.heading(), f"Model angle {self.model.currentAngle} inconsistent with reality : {self.heading()}"
+        assert (
+            self.model.currentPosition == self.position()
+        ), f"Model position {self.model.currentPosition} inconsistent with reality : {self.position()}"
+        assert (
+            # From https://github.com/python/cpython/blob/master/Lib/turtle.py#L1895
+            round(
+                math.atan2(self.model.currentAttitude[1], self.model.currentAttitude[0])
+                * 180.0
+                / math.pi,
+                10,
+            )
+            % 360.0
+            == self.heading()
+        ), f"Model angle {self.model.currentAngle} inconsistent with reality : {self.heading()}"
 
     def move(self, distance: int):
 
@@ -157,59 +168,57 @@ class InteractiveTurtle(turtle.Turtle):
 # Usual cmd interface, OO-style
 class TurtleRepl(cmd.Cmd):
 
-    intro = 'Welcome to the tootle shell.   Type help or ? to list commands.\n'
-    prompt = '(tootle) '
+    intro = "Welcome to the tootle shell.   Type help or ? to list commands.\n"
+    prompt = "(tootle) "
     tootle = InteractiveTurtle()
 
     # ----- basic turtle commands -----
     def do_move(self, distance):
-        'Move the turtle forward by the specified distance:  FORWARD 10'
+        "Move the turtle forward by the specified distance:  FORWARD 10"
         self.tootle.move(distance)
 
     def do_left(self, angle):
-        'Turn turtle right by given number of degrees:  LEFT 20'
+        "Turn turtle right by given number of degrees:  LEFT 20"
         self.tootle.left(angle)
 
     def do_right(self, angle):
-        'Turn turtle right by given number of degrees:  RIGHT 20'
+        "Turn turtle right by given number of degrees:  RIGHT 20"
         self.tootle.right(angle)
 
     def do_home(self):
-        'Return turtle to the home postion:  HOME'
+        "Return turtle to the home postion:  HOME"
         self.tootle.home()
 
     # This is "read-only"
     def do_position(self, arg):
-        'Print the current turle position:  POSITION'
-        print('Current position is {}'.format(self.tootle.position()))
+        "Print the current turle position:  POSITION"
+        print("Current position is {}".format(self.tootle.position()))
 
     # This is "read-only"
     def do_heading(self, arg):
         "Print the current turle heading in degrees:  HEADING"
-        print('Current heading is {}'.format(self.tootle.heading()))
+        print("Current heading is {}".format(self.tootle.heading()))
 
     # This is only cosmetic :-)
     def do_color(self, arg):
-        'Set the color:  COLOR BLUE'
+        "Set the color:  COLOR BLUE"
         self.tootle.color(arg.lower())
 
     def do_reset(self, arg):
-        'Clear the screen and return turtle to center:  RESET'
+        "Clear the screen and return turtle to center:  RESET"
         self.tootle.reset()
 
     def do_bye(self, arg):
-        'Stop recording, close the turtle window, and exit:  BYE'
-        print('Thank you for using Turtle')
+        "Stop recording, close the turtle window, and exit:  BYE"
+        print("Thank you for using Turtle")
         self.tootle.bye()
         return True
 
 
 def parse(arg):
-    'Convert a series of zero or more numbers to an argument tuple'
+    "Convert a series of zero or more numbers to an argument tuple"
     return tuple(map(int, arg.split()))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     TurtleRepl().cmdloop()
-
-
