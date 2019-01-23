@@ -200,8 +200,10 @@ class TurtleRepl(cmd.Cmd):
         print("Current heading is {}".format(self.tootle.heading()))
 
     # This is only cosmetic :-)
-    def do_color(self, arg):
+    def do_color(self, arg = None):
         "Set the color:  COLOR BLUE"
+        if arg is None or arg is '':
+            arg = 'black'
         self.tootle.color(arg.lower())
 
     def do_reset(self, arg):
