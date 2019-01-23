@@ -61,7 +61,8 @@ class SimTurtle:
 
     def reset(self):
         logging.info("simulating reset")
-        self.currentPosition = 0
+        self.currentPosition = turtle.Vec2D(0, 0)
+        self.currentAttitude = turtle.Vec2D(0, 0)
 
     # No bye, no deletion, python garbage collect...
 
@@ -209,6 +210,7 @@ class TurtleRepl(cmd.Cmd):
 
     def do_reset(self, arg):
         "Clear the screen and return turtle to center:  RESET"
+        self.do_color()
         self.tootle.reset()
 
     def do_bye(self, arg):
