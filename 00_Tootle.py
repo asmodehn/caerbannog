@@ -45,6 +45,15 @@ class SimTurtle:
 
         self.currentAttitude = self.currentAttitude.rotate(angle)
 
+    def heading(self):
+        # From https://github.com/python/cpython/blob/master/Lib/turtle.py#L1895
+        return round(
+            math.atan2(self.currentAttitude[1], self.currentAttitude[0])
+            * 180.0
+            / math.pi,
+            10,
+        ) % 360.0
+
     def penup(self):
         logging.info("simulating pen UP")
         self.currentPenState = PenState.UP
@@ -58,11 +67,6 @@ class SimTurtle:
         logging.info("simulating going home")
         self.currentPosition = turtle.Vec2D(0, 0)
         self.currentAttitude = turtle.Vec2D(1, 0)
-
-    def reset(self):
-        logging.info("simulating reset")
-        self.currentPosition = turtle.Vec2D(0, 0)
-        self.currentAttitude = turtle.Vec2D(0, 0)
 
     # No bye, no deletion, python garbage collect...
 
@@ -80,16 +84,8 @@ class InteractiveTurtle(turtle.Turtle):
             self.model.currentPosition == self.position()
         ), f"Model position {self.model.currentPosition} inconsistent with reality : {self.position()}"
         assert (
-            # From https://github.com/python/cpython/blob/master/Lib/turtle.py#L1895
-            round(
-                math.atan2(self.model.currentAttitude[1], self.model.currentAttitude[0])
-                * 180.0
-                / math.pi,
-                10,
-            )
-            % 360.0
-            == self.heading()
-        ), f"Model angle {self.model.currentAngle} inconsistent with reality : {self.heading()}"
+            self.model.heading() == self.heading()
+        ), f"Model angle {self.model.heading()} inconsistent with reality : {self.heading()}"
 
     def move(self, distance: int):
 
@@ -157,7 +153,7 @@ class InteractiveTurtle(turtle.Turtle):
         logging.info("RESET!")
         self._compare_model()
 
-        self.model.reset()
+        self.model = SimTurtle()
         super().reset()
 
         self._compare_model()
