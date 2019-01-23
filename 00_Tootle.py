@@ -174,7 +174,7 @@ class TurtleRepl(cmd.Cmd):
 
     # ----- basic turtle commands -----
     def do_move(self, distance):
-        "Move the turtle forward by the specified distance:  FORWARD 10"
+        "Move the turtle forward by the specified distance:  MOVE 10"
         self.tootle.move(distance)
 
     def do_left(self, angle):
