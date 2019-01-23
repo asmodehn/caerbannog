@@ -56,7 +56,8 @@ class SimTurtle:
     # Adding these to complete the model with a minimum of useful functions
     def home(self):
         logging.info("simulating going home")
-        self.currentPosition = 0
+        self.currentPosition = turtle.Vec2D(0, 0)
+        self.currentAttitude = turtle.Vec2D(1, 0)
 
     def reset(self):
         logging.info("simulating reset")
@@ -185,7 +186,7 @@ class TurtleRepl(cmd.Cmd):
         "Turn turtle right by given number of degrees:  RIGHT 20"
         self.tootle.right(angle)
 
-    def do_home(self):
+    def do_home(self, arg):
         "Return turtle to the home postion:  HOME"
         self.tootle.home()
 
