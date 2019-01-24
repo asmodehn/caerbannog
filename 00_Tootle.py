@@ -216,10 +216,5 @@ class TurtleRepl(cmd.Cmd):
         return True
 
 
-def parse(arg):
-    "Convert a series of zero or more numbers to an argument tuple"
-    return tuple(map(int, arg.split()))
-
-
 if __name__ == "__main__":
     TurtleRepl().cmdloop()
