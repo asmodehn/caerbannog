@@ -136,7 +136,7 @@ class SimTurtle:
 
 
 # The composed (delegation) OO architecture
-# taking turtle.Turtle as an unknown black box
+# Taking SimTurtle turtle.Turtle as an unknown black box
 # => we do not know, so we simulate, based on hypothesis, and we experiment to confirm/infirm them.
 class InteractiveTurtle:
 
@@ -150,7 +150,7 @@ class InteractiveTurtle:
         ), f"Model position {self.model.position} inconsistent with reality : {self.position()}"
         assert (
             self.model.heading() == self.heading()
-        ), f"Model angle {self.model.heading(self.model.state)} inconsistent with reality : {self.heading()}"
+        ), f"Model angle {self.model.heading()} inconsistent with reality : {self.heading()}"
 
     def position(self):
         # Apparently we should use here the "real" one (from the view)
@@ -248,6 +248,15 @@ class TurtleRepl:
         # ----- Setting up cmd via delegation-----
         self.cmd.prompt = "(tootle) "
 
+        # Should probably be in python core implementation
+        def do_EOF(self, _):
+            "Stop recording, close the turtle window, and exit:  BYE"
+            print("Thank you for using Turtle")
+            repl.tootle.bye()
+            return True
+
+        self.cmd.do_EOF = types.MethodType(do_EOF, self.cmd)
+
         def onecmd(self, line):
             """Interpret the argument as though it had been typed in response
             to the prompt.
@@ -261,39 +270,39 @@ class TurtleRepl:
             cmd, arg, line = self.parseline(line)
             if not line:
                 return self.emptyline()
-
+            if cmd is None:
+                return self.default(line)
             self.lastcmd = line
             if line == 'EOF':
                 self.lastcmd = ''
-
-            if cmd is None:
-                return self.default(line)
             if cmd == '':
                 return self.default(line)
+            else:
+                try:
+                    func = getattr(self, 'do_' + cmd)
+                except AttributeError:
+                    return self.default(line)
 
-            stop = False
-            while not stop and cmd is not None and len(cmd) > 0:
+                # inspect the function to discover how many arguments are necessary
+                sig = inspect.signature(func)
+                # attempt to parse these arguments
+                leftover = arg
+                # TODO : function compact expression ?
+                args = []
+                for n in range(0, len(sig.parameters)):
+                    arg, leftover, _ = self.parseline(leftover)
+                    args.append(arg)
+                # recover unused arguments
+                stop = func(*args)
 
-                    try:
-                        func = getattr(self, 'do_' + cmd)
-                    except AttributeError:
-                        return self.default(line)
+                if not stop:
+                    if leftover:
+                        # recurse for the rest of the line
+                        stop = self.onecmd(leftover)
 
-                    # inspect the function to discover how many arguments are necessary
-                    sig = inspect.signature(func)
-                    # attempt to parse these arguments
-                    leftover = arg
-                    # TODO : function compact expression ?
-                    args = []
-                    for n in range(0, len(sig.parameters)):
-                        arg, leftover, _ = self.parseline(leftover)
-                        args.append(arg)
-                    # recover unused arguments
-                    stop = func(*args)
+                return stop
 
-                    # loop
-                    cmd, arg, line = self.parseline(leftover)
-                    # TODO : same, cleaner with recursion ?
+        self.cmd.onecmd = types.MethodType(onecmd, self.cmd)
 
         # TODO
         # def complete(self, text, state):
@@ -327,7 +336,6 @@ class TurtleRepl:
         #         return None
 
 
-        self.cmd.onecmd = types.MethodType(onecmd, self.cmd)
         # self.cmd.complete = types.MethodType(complete, self.cmd)
 
         repl = self
