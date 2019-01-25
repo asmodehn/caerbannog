@@ -9,6 +9,7 @@ verify_ssl = true
 attr = "*"
 black = "*"
 pint = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.6"
