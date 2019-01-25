@@ -19,3 +19,8 @@ The test have also been kept minimal.
         It is also the client/user of the State module, used to illustrate the various points regarding code architecture made in the talk.
 - State : A data structure representing the turtle state, that we will manipulate in code.
 - utils : misc. small useful stuff.
+
+## TODO : 
+- docs and doctests
+- sphinx doc generation
+- allow interactive tests from webpage (??)

@@ -1,3 +1,0 @@
-# Testing is not relevant here anymore, as we are testing in simulation all the time....
-# But we might want to extensively test our SimTurtle model
-

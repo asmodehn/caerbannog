@@ -22,13 +22,14 @@ Along the way we will isolate functional patterns that enable us to :
 - Improve how we can do live automated testing
 - Improve our interface with the "real" turtle (the python module)
 - Improve our interface with the user (our interpreter)
+- Improve our dataflow feedback.
 
 The journey :
 
-- 00_Tootle : the Object Oriented (Interactive) Turtle. Using the inheritance-style interface from python classes.
-- 01_ComposedTootle : A Tootle, with composition/delegation, but no inheritance. Repl now support sequence of arguments.
-- 02_FunctionalTurtle : A Functional Turtle.
-- more to come...
+- 01 Tootle : the Object Oriented (Interactive) Turtle. Using the inheritance-style interface from python classes.
+- 02 ComposedTootle : A Tootle, with composition/delegation, but delegation instead of inheritance. Repl now support sequence of arguments.
+- 03 FunctionalTurtle : A Functional Turtle. Repl support fluent code API design.
+- 04 MonadicTurtle: A Monadic Turtle...
 
 
 

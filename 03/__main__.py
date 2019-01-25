@@ -3,8 +3,8 @@ from repl import TurtleRepl
 
 # Testing before run
 import pytest
-import test_State
-pytest.main(['-s', test_State.__file__])
+import test_state
+pytest.main(['-s', test_state.__file__])
 
 # Manual interaction
 TurtleRepl().cmdloop()
