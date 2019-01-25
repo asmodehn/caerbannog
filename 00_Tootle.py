@@ -20,15 +20,11 @@ class PenState(enum.Enum):
 #
 # note that doing so we already, in a way, separated the "model" from the actual "implementation code".
 # We reuse here turtle.Vec2D to get exactly the same code representing the model, and what is actually happening.
-class SimTurtle:
+class TurtleState:
 
     currentPosition = turtle.Vec2D(0, 0)
     currentAttitude = turtle.Vec2D(1, 0)  # Represents an angle in a nice computable way
     currentPenState = PenState.DOWN
-    #: the list of lines drawn, as the expected side effect.
-    drawing = []
-
-    # no init, just like in the code model
 
     def move(self, distance: int):
         logging.info("simulating move {0}".format(distance))
@@ -45,15 +41,6 @@ class SimTurtle:
 
         self.currentAttitude = self.currentAttitude.rotate(angle)
 
-    def heading(self):
-        # From https://github.com/python/cpython/blob/master/Lib/turtle.py#L1895
-        return round(
-            math.atan2(self.currentAttitude[1], self.currentAttitude[0])
-            * 180.0
-            / math.pi,
-            10,
-        ) % 360.0
-
     def penup(self):
         logging.info("simulating pen UP")
         self.currentPenState = PenState.UP
@@ -67,6 +54,32 @@ class SimTurtle:
         logging.info("simulating going home")
         self.currentPosition = turtle.Vec2D(0, 0)
         self.currentAttitude = turtle.Vec2D(1, 0)
+
+
+class SimTurtle(TurtleState):
+
+    #: the list of lines drawn, as the expected side effect.
+    drawing = []
+
+    # no init, just like in the code model
+
+    def move(self, distance: int):
+        logging.info("simulating move {0}".format(distance))
+
+        old_position = self.currentPosition
+        super().move(distance)
+
+        if self.currentPenState == PenState.DOWN:
+            self.drawing.append((old_position, self.currentPosition))
+
+    def heading(self):
+        # From https://github.com/python/cpython/blob/master/Lib/turtle.py#L1895
+        return round(
+            math.atan2(self.currentAttitude[1], self.currentAttitude[0])
+            * 180.0
+            / math.pi,
+            10,
+        ) % 360.0
 
     # No bye, no deletion, python garbage collect...
 
@@ -166,6 +179,13 @@ class InteractiveTurtle(turtle.Turtle):
 # Usual cmd interface, OO-style
 class TurtleRepl(cmd.Cmd):
 
+    # Should probably be in python core implementation
+    def do_EOF(self, _):
+        "Stop recording, close the turtle window, and exit:  BYE"
+        print("Thank you for using Turtle")
+        self.tootle.bye()
+        return True
+
     intro = "Welcome to the tootle shell.   Type help or ? to list commands.\n"
     prompt = "(tootle) "
     tootle = InteractiveTurtle()
@@ -183,17 +203,17 @@ class TurtleRepl(cmd.Cmd):
         "Turn turtle right by given number of degrees:  RIGHT 20"
         self.tootle.right(angle)
 
-    def do_home(self, arg):
+    def do_home(self, _):
         "Return turtle to the home postion:  HOME"
         self.tootle.home()
 
     # This is "read-only"
-    def do_position(self, arg):
+    def do_position(self, _):
         "Print the current turle position:  POSITION"
         print("Current position is {}".format(self.tootle.position()))
 
     # This is "read-only"
-    def do_heading(self, arg):
+    def do_heading(self, _):
         "Print the current turle heading in degrees:  HEADING"
         print("Current heading is {}".format(self.tootle.heading()))
 
@@ -204,16 +224,13 @@ class TurtleRepl(cmd.Cmd):
             arg = 'black'
         self.tootle.color(arg.lower())
 
-    def do_reset(self, arg):
+    def do_reset(self, _):
         "Clear the screen and return turtle to center:  RESET"
         self.do_color()
         self.tootle.reset()
 
-    def do_bye(self, arg):
-        "Stop recording, close the turtle window, and exit:  BYE"
-        print("Thank you for using Turtle")
-        self.tootle.bye()
-        return True
+    def do_bye(self, _):
+        return self.do_EOF(_)
 
 
 if __name__ == "__main__":
