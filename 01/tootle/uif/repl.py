@@ -1,6 +1,6 @@
 import cmd
 
-from Real import InteractiveTurtle
+from .real import InteractiveTurtle
 
 
 # Usual cmd interface, OO-style
@@ -13,9 +13,13 @@ class TurtleRepl(cmd.Cmd):
         self.tootle.bye()
         return True
 
+    def __init__(self, simulation, completekey='tab', stdin=None, stdout=None):
+        self.tootle = InteractiveTurtle(simulation)
+        super().__init__(completekey, stdin, stdout)
+
+    tootle = None
     intro = "Welcome to the tootle shell.   Type help or ? to list commands.\n"
     prompt = "(tootle) "
-    tootle = InteractiveTurtle()
 
     # ----- basic turtle commands -----
     def do_move(self, distance):

@@ -1,17 +1,17 @@
 import turtle
 import logging
 
-from Sim import SimTurtle
-
 
 # The usual OO inheritance interface
 # taking turtle.Turtle as an unknown black box
 # => we do not know, so we simulate, based on hypothesis, and we experiment to confirm/infirm them.
 class InteractiveTurtle(turtle.Turtle):
 
-    model = SimTurtle()
+    def __init__(self, simulation):
+        self.model = simulation
+        super().__init__()
 
-    # abasic comparison function to make sure our model stays on track...
+    # a basic comparison function to make sure our model stays on track...
     def _compare_model(self):
         assert (
             self.model.currentPosition == self.position()
@@ -82,11 +82,11 @@ class InteractiveTurtle(turtle.Turtle):
 
         self._compare_model()
 
-    def reset(self):
+    def reset(self, simulation):
         logging.info("RESET!")
         self._compare_model()
 
-        self.model = SimTurtle()
+        self.model = simulation
         super().reset()
 
         self._compare_model()

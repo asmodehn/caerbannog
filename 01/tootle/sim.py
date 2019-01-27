@@ -1,8 +1,8 @@
 import math
 import logging
 
-from utils import PenState
-from State import TurtleState
+from .utils import PenState
+from .state import TurtleState
 
 
 class SimTurtle(TurtleState):
