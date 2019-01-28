@@ -7,6 +7,8 @@ verify_ssl = true
 
 [packages]
 pytest = "*"
+tk = "*"
+tkinter = "*"
 
 [requires]
 python_version = "3.7"
