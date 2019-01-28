@@ -1,12 +1,11 @@
 import turtle
 import logging
 
-from utils import PenState
+from .utils import PenState
 
 
 # Directly, naively, modeled in python 3.6
 # from the code shown in : https://www.youtube.com/watch?v=AG3KuqDbmhM
-
 
 
 # Code isolated from the side-effects (commands and display)

@@ -1,4 +1,4 @@
-from State import TurtleState
+from ..state import TurtleState
 
 # TODO : improve... but with useful things for illustrating the point...
 def test_move(distance):
