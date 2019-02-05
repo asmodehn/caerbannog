@@ -1,10 +1,10 @@
 import time
 
-from tootle import Turtle
+import tootle
 
 
 def triangle():
-    tt = Turtle()
+    tt = tootle.Turtle()
     dist = 200
 
     tt.move(dist)
