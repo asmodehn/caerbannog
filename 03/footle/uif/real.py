@@ -1,6 +1,6 @@
 import turtle
 
-from sim import SimTurtle
+from ..sim import SimTurtle
 
 
 # The "functional" architecture ( from the talk )

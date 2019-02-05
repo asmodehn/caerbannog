@@ -1,4 +1,4 @@
-from utils import PenState
+from .utils import PenState
 
 
 
