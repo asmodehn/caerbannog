@@ -1,6 +1,7 @@
 import logging
 import turtle
-from sim import SimTurtle
+from ..sim import SimTurtle
+
 
 # The composed (delegation) OO architecture
 # Taking SimTurtle turtle.Turtle as an unknown black box

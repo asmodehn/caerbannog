@@ -1,8 +1,8 @@
 import logging
 import math
 
-from utils import PenState
-from state import TurtleState
+from .utils import PenState
+from .state import TurtleState
 
 # Note we use a class here like "module" was used in the presentation, to encapsulate code.
 # There are other ways to achieve the same goal, for example having separate module for each class used here.

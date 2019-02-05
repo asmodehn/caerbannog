@@ -1,6 +1,6 @@
 import turtle
 import logging
-from utils import PenState
+from .utils import PenState
 
 
 # Code isolated from the side-effects (commands and display)

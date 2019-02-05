@@ -1,7 +1,7 @@
 import cmd
 import inspect
 
-from real import InteractiveTurtle
+from .real import InteractiveTurtle
 
 # Usual cmd interface, composed OO-style
 import types
