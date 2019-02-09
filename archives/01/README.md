@@ -9,7 +9,7 @@ This is a python package as code example, meant to be run by starting :
 `python -m tootle`
 
 Note the virtual environment should be setup previously, from this directory, by running :
-` pipenv shell`.
+`pipenv shell`.
 This folder also supports direnv to setup the environment, as soon as you `cd` into it.
 
 This is not intended to be distributed, since python requires more boilerplate for this, and we do not want to over-complicate or hide the point.

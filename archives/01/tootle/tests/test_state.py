@@ -1,6 +1,8 @@
 from ..state import TurtleState
 
+
 # TODO : improve... but with useful things for illustrating the point...
+# TODO : maybe simplify (ie. use only unittests for now)
 def test_move(distance):
     s = TurtleState()
     s.move(distance)
