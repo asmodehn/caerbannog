@@ -1,17 +1,17 @@
 import time
 
-import tootle
+import abstle
 
 
 def triangle():
-    state = tootle.create()
+    state = abstle.create()
     dist = 200
 
-    tootle.move(dist, state)
-    tootle.left(120, state)
-    tootle.move(dist, state)
-    tootle.left(120, state)
-    tootle.move(dist, state)
+    abstle.move(dist, state)
+    abstle.left(120, state)
+    abstle.move(dist, state)
+    abstle.left(120, state)
+    abstle.move(dist, state)
 
 
 if __name__ == '__main__':

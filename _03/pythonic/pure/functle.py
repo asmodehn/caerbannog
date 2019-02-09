@@ -1,10 +1,9 @@
 import turtle
-
-
 import enum
 import pint
 ureg = pint.UnitRegistry()
 
+import purity
 
 # Side Note: Yes, Python has enums !
 class PenState(enum.Enum):
@@ -32,6 +31,7 @@ class TurtleState:
     def __init__(self):
         self.real = turtle.Turtle()
 
+    # underscored to prevent overriding when pipelining...
     def move(self, distance: int):
         self.real.forward(distance=distance)
 
@@ -48,42 +48,47 @@ class TurtleState:
         self.real.pendown()
 
 
-def create():
-    return TurtleState()
+# Class as owner of the state, used for composing turtle functions
+class Functle:
 
+    def __init__(self):
+        self.state = TurtleState()
 
-def move(distance: int, state: TurtleState):
+    def move(self, distance: int):
+        # TMP HACK
+        distance = int(distance)
 
-    # TMP HACK
-    distance = int(distance)
+        self.state.move(distance=distance)
 
-    state.move(distance=distance)
+        return self
 
+    def right(self, angle: int):
 
-def right(angle: int, state: TurtleState):
+        # TMP HACK
+        angle = int(angle * ureg.degrees)
 
-    # TMP HACK
-    angle = int(angle * ureg.degrees)
+        self.state.right(angle)
 
-    state.right(angle)
+        return self
 
+    def left(self, angle: int):
 
-def left(angle: int, state: TurtleState):
+        # TMP HACK
+        angle = int(angle)
 
-    # TMP HACK
-    angle = int(angle)
+        self.state.left(angle)
 
-    state.left(angle)
+        return self
 
+    def penup(self):
+        self.state.penup()
 
-def penup(state: TurtleState):
-    state.penup()
+        return self
 
+    def pendown(self):
+        self.state.pendown()
 
-def pendown(state: TurtleState):
-    state.pendown()
-
-
+        return self
 
 
 
