@@ -16,9 +16,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(1, os.path.abspath('../01'))
 
 
 # -- General configuration ------------------------------------------------
@@ -35,6 +35,7 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.coverage',
     'sphinx.ext.imgmath',
     'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.githubpages']
 
 # Add any paths that contain templates here, relative to this directory.
@@ -77,6 +78,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
+
+# Link to python documentation
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False

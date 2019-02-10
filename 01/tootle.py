@@ -14,20 +14,23 @@ class PenState(enum.Enum):
 
 # The usual OO inheritance interface
 # taking turtle.Turtle as an unknown black box.
-# We just provide shortcuts to some of its methods and attributes here for clarity.
-class Turtle(turtle.Turtle):
-
+# We provide shortcuts to some of its methods and attributes here for interfacing with turtle,
+# while trying to keep the turtle API small.
+class Tootle(turtle.Turtle):
+    """
+    Inheriting from provided Turtle class, OO style.
+    """
     @property
     def position(self):
-        return super().position
+        return super().position()  # TODO : mutable
 
     @property
     def angle(self):
-        return super().heading()
+        return super().heading()  # TODO : mutable
 
     @property
     def penState(self):
-        return super().pen().get('pendown')
+        return super().pen().get('pendown')  # TODO mutable
 
     def move(self, distance: int):
 
