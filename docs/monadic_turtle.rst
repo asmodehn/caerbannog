@@ -40,6 +40,13 @@ Monadic
 
 
 
+
+API
+---
+
+:doc:`API/monadic_turtle`
+
+
 Pros:
 - looks imperatve but preserve immutability
 - functions are still composable

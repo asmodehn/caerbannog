@@ -15,6 +15,8 @@ Follow the white rabbit... at your own peril.
 
    object_oriented_turtle
    abstract_data_turtle
+   functional_turtle
+   monadic_turtle
 
 
 Various API documentation
@@ -26,6 +28,8 @@ Various API documentation
 
    API/object_oriented_turtle
    API/abstract_data_turtle
+   API/functional_turtle
+   API/monadic_turtle
 
 
 Indices and tables
