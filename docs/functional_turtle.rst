@@ -24,6 +24,12 @@ Pure
 
 
 
+API
+---
+
+:doc:`API/functional_turtle`
+
+
 Overall
 -------
 

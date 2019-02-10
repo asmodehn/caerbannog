@@ -7,6 +7,7 @@ def triangle():
     state = tootle.TurtleState()
     dist = 200
 
+    # adhoc function composition in python
     tootle.move(dist,
                 tootle.left(120,
                             tootle.move(dist,
