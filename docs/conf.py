@@ -19,6 +19,7 @@
 import os
 import sys
 sys.path.insert(1, os.path.abspath('../01'))
+sys.path.insert(1, os.path.abspath('../02'))
 
 
 # -- General configuration ------------------------------------------------

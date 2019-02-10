@@ -10,6 +10,11 @@ From hte caller point of view it is an opaque data structure
 Each function needs the state to be passed in.
 
 
+.. literalinclude:: ../02/abstle.py
+   :encoding: utf-8
+   :language: python
+   :emphasize-lines: 12,15-18
+
 
 
 Pros:
@@ -25,3 +30,10 @@ Cons:
 
 Pythonic
 --------
+
+
+
+API
+---
+
+:doc:`API/abstract_data_turtle`
