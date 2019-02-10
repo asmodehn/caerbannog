@@ -4,7 +4,7 @@ import tootle
 
 
 def triangle():
-    tt = tootle.Turtle()
+    tt = tootle.Tootle()
     dist = 200
 
     tt.move(dist)

@@ -1,12 +1,12 @@
 import turtle
 
-
 import enum
+
 import pint
 ureg = pint.UnitRegistry()
 
 
-# Side Note: Yes, Python has enums !
+# We use enum for simple values as type
 class PenState(enum.Enum):
     UP = -1
     DOWN = 1
@@ -19,39 +19,30 @@ class PenState(enum.Enum):
 class Tootle(turtle.Turtle):
     """
     Inheriting from provided Turtle class, OO style.
+    >>> t = Tootle()
+
+
     """
     @property
     def position(self):
-        return super().position()  # TODO : mutable
+        return super().position() * ureg.pixel
 
     @property
     def angle(self):
-        return super().heading()  # TODO : mutable
+        return super().heading() * ureg.degrees
 
     @property
     def penState(self):
-        return super().pen().get('pendown')  # TODO mutable
+        return super().pen().get('pendown')
 
     def move(self, distance: int):
-
-        # TMP HACK
-        distance = int(distance)
-
         super().forward(distance=distance)
 
     def right(self, angle: int):
-
-        # TMP HACK
-        angle = int(angle * ureg.degrees)
-
-        super().right(angle)
+        super().right(angle * ureg.degrees)
 
     def left(self, angle: int):
-
-        # TMP HACK
-        angle = int(angle)
-
-        super().left(angle)
+        super().left(angle * ureg.degrees)
 
     def penup(self):
         super().penup()
