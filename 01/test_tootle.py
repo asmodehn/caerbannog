@@ -1,18 +1,36 @@
 import unittest
+import unittest.mock as mock
 import random
 
+# for mocking
+import turtle
 
-
+# for testing
 import tootle
 
 
 class TestTootle(unittest.TestCase):
+    """
+    It is overly complicated to test the actual Turtle behavior with the current OO design,
+    since the inheritance mechanism uses the logic of the super class and related class hierarchies.
+    Also any action with side effect will modify the environment, which we don't control by definition,
+    by changing the start position of the turtle and will affect the following test, for example.
 
-    def setUp(self):
+    What we can do however, is that our own code is using the rest of the code as expected, using a mock.
+    The mock will prevent any side effect by intercepting any procedure call, and register counters,
+    before it interferes with the outside world. but we need to investigate the superclass hierarchy to understand
+    its behavior and relationship.This breaks the original encapsulation intent...
+
+    Anyway, it is better than not testing, but this tests almost nothing.
+    It will not test the whole behavior, and it doesn't scale to test integration of multiple components.
+    It is also quite fragile with inheritance, as we have to plug our mock in the exact place, which can be quite hacky
+    """
+
+    @mock.patch('turtle.TurtleScreen', autospec=True)
+    def setUp(self, mock_tscreen):
         self.t = tootle.Tootle()
-        # Finding the maximum distance we can move, in one direction, without reaching the edge.
-        self.max_test_dist = min(self.t.getscreen().canvwidth, self.t.getscreen().canvheight)
-        self.max_test_angle = 360
+        # TODO ... currently mock breaks the turtle...
+        assert mock_tscreen.called_with()
 
     def check_move(self, dist: int):
         """
@@ -22,17 +40,18 @@ class TestTootle(unittest.TestCase):
         """
         # get position before
         p0 = self.t.position
-        self.t.move(dist)
 
         # get position after
         p1 = self.t.position
 
         assert p1 - p0 == dist
 
-    def test_move(self):
+    @mock.patch("turtle.Turtle.forward")
+    def test_move(self, mockturtle):
         """ Testing multiple values of distance"""
         for d in [random.randint(0, self.max_test_dist) for _ in range(20)]:
-            self.check_move(d)
+            self.t.move(d)
+            assert mockturtle.forward.assert_called_with(d)
 
     def check_right(self, angle: int):
         """Testing that right actually orientates right"""
@@ -80,3 +99,7 @@ class TestTootle(unittest.TestCase):
 
         ps1 = self.t.pen
         assert ps1 == tootle.PenState.DOWN
+
+
+if __name__ == '__main__':
+    unittest.main()
