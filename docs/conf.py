@@ -20,6 +20,8 @@ import os
 import sys
 sys.path.insert(1, os.path.abspath('../01'))
 sys.path.insert(1, os.path.abspath('../02'))
+sys.path.insert(1, os.path.abspath('../03'))
+sys.path.insert(1, os.path.abspath('../04'))
 
 
 # -- General configuration ------------------------------------------------
@@ -170,7 +172,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'Caerbannog', u'Caerbannog Documentation',
-     author, 'Caerbannog', 'One line description of project.',
+     author, 'Caerbannog', 'Follow the white rabbit.',
      'Miscellaneous'),
 ]
 
