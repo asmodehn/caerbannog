@@ -1,6 +1,7 @@
 import turtle
 import enum
 import pint
+
 ureg = pint.UnitRegistry()
 
 
@@ -24,6 +25,7 @@ class _TurtleState:
     """
     TurtleState is mutable and therefore private.
     """
+
     def __init__(self):
         self.update()
 
@@ -33,12 +35,12 @@ class _TurtleState:
         """Update from the global abstle"""
         self.position = _abstle.position()
         self.angle = _abstle.heading()
-        self.penState = _abstle.pen().get('pendown')
+        self.penState = _abstle.pen().get("pendown")
 
 
-def create():
+def create(supermodel=None):
     global _abstle
-    _abstle = turtle.Turtle()
+    _abstle = supermodel if supermodel is not None else turtle.Turtle()
     return _TurtleState()
 
 
@@ -90,8 +92,3 @@ def pendown(state: _TurtleState):
     _abstle.pendown()
     # This will mutate the state
     state.update()
-
-
-
-
-

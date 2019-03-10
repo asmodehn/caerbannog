@@ -1,10 +1,17 @@
 import time
 
+import turtle
 import abstle
 
 
 def triangle():
-    abstle = abstle.Abstle()
+    """
+    Draw a triangle
+    :return:
+    """
+    bob = turtle.Turtle()
+
+    abstle = abstle.Abstle(bob)
     dist = 200
 
     # as a result of encapsulating the state in a class with methods
