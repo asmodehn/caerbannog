@@ -35,9 +35,9 @@ class Abstle:
     def penState(self):
         return self.mutate.pen().get('pendown')
 
-    def __init__(self):
+    def __init__(self, mutable=None):
         # one attribute as interface and entry point for mutation
-        self.mutate = turtle.Turtle()
+        self.mutate = mutable if mutable is not None else turtle.Turtle()
 
     def move(self, distance: int):
 
