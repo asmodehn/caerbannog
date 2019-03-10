@@ -7,11 +7,8 @@ verify_ssl = true
 
 [packages]
 pytest = "*"
-pint = "*"
-black = "*"
+#tk = "*"
+#tkinter = "*"
 
 [requires]
 python_version = "3.7"
-
-[pipenv]
-allow_prereleases = true
