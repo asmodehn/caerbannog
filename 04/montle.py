@@ -4,6 +4,8 @@ from __future__ import annotations
 
 
 import contextlib
+import math
+
 import functools
 import turtle
 import enum
@@ -125,25 +127,35 @@ def move(distance: int, impl: TurtleImpl):
     # TMP HACK
     distance = int(distance)
 
-    #  attempt
-    position = impl.impl.position
+    # precomputing movable distance to remain in screen
+    # TODO : convert screen coord / worldcoords
+    TL, BL, BR, TR = map(lambda x: turtle.Vec2D(*(impl.impl.screen.screensize()[0] * x[0] * 0.5, impl.impl.screen.screensize()[1] * x[1] * 0.5)),
+                                                [(-1, 1), (-1, -1),(1,-1),(1,1)])
+    # forecasting position (TODO : test code)
+    forecast_pos = impl.state.position + (turtle.Vec2D(math.cos(impl.state.angle), math.sin(impl.state.angle)) * distance)
+    #impl.impl.forward(distance)
+    #assert impl.impl.position() == forecast_pos, f"{impl.impl.position()} is not {forecast_pos}"
 
-    expected_reached = None # TODO
+    # capping distance (implementing artificial canvas limitations):
+    capped_distance = distance
+    if forecast_pos[0] > (BR + TR)[0] or forecast_pos[1] > (TL + TR)[1]:
+        forecast_pos = ( min( (BR + TR)[0], forecast_pos[0]), min((TL + TR)[1], forecast_pos[1]))
+    if forecast_pos[0] < (BL + TL)[0] or forecast_pos[1] < (BL + BR)[1]:
+        forecast_pos = (max((BL +TL)[0], forecast_pos[0]), max((BL+BR)[1], forecast_pos[1]))
 
-    impl.impl.forward(distance=distance)
-
-    reached_pos = impl.impl.position
-
+    capped_distance = math.sqrt( math.pow(forecast_pos[0] - impl.state.position[0],2) + math.pow(forecast_pos[1] - impl.state.position[1], 2))
+    impl.impl.forward(capped_distance)
 
     # moved distance ...
+    # It's the opposite of what we coull be doing here for control...
+    # delta = deltapos(expected_reached, reached_pos) and return delta to adjust next call...
     # Note :  TODO : because of this 04 seems to be a good place to introduce control instead of 3...
     # TODO : however it is probably better to wait until we get events to log out control and be able to debug/replay it.
     # TODO : OR NOT ? do we have a way to gradually optimise higher control, ie log of control ? That is, the more it works, the less we want to log about it.
-    # It's just the opposite of what we are supposed to do here
-    delta = deltapos(expected_reached, reached_pos)
+
 
     # return new state (it is immutable)
-    return TurtleImpl(impl=impl.impl, state=TurtleState(position=impl.impl.position(), angle=impl.impl.heading(), pen=impl.impl.pen().get('pendown'))), delta
+    return TurtleImpl(impl=impl.impl, state=TurtleState(position=impl.impl.position(), angle=impl.impl.heading(), pen=impl.impl.pen().get('pendown'))), capped_distance
 
 
 @MonadicTurtle('impl')
@@ -167,7 +179,7 @@ def left(angle: int, impl: TurtleImpl):
     impl.impl.left(angle)
 
     # return new state (it is immutable)
-    return impl, TurtleState(position=impl.impl.position(), angle=impl.impl.heading(), pen=impl.impl.pen().get('pendown'))
+    return TurtleImpl(impl=impl.impl, state=TurtleState(position=impl.impl.position(), angle=impl.impl.heading(), pen=impl.impl.pen().get('pendown')))
 
 
 @MonadicTurtle('impl')
@@ -175,7 +187,7 @@ def penup(impl: TurtleImpl):
     impl.impl.penup()
 
     # return new state (it is immutable)
-    return impl, TurtleState(position=impl.impl.position(), angle=impl.impl.heading(), pen=impl.impl.pen().get('pendown'))
+    return TurtleImpl(impl=impl.impl, state=TurtleState(position=impl.impl.position(), angle=impl.impl.heading(), pen=impl.impl.pen().get('pendown')))
 
 
 @MonadicTurtle('impl')
@@ -183,7 +195,7 @@ def pendown(impl: TurtleImpl):
     impl.impl.pendown()
 
     # return new state (it is immutable)
-    return impl, TurtleState(position=impl.impl.position(), angle=impl.impl.heading(), pen=impl.impl.pen().get('pendown'))
+    return  TurtleImpl(impl=impl.impl, state=TurtleState(position=impl.impl.position(), angle=impl.impl.heading(), pen=impl.impl.pen().get('pendown')))
 
 
 
