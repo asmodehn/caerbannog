@@ -1,24 +1,26 @@
 import time
 
-import tootle
+import montle
 
 
 def triangle():
+    # planning for triangle
+    dist = 200
 
-    with tootle.MonadicTurtle() as m:
+    Mtriangle = montle.move(dist)
 
-        dist = 20000
-        moved = m.move(dist)
 
-        if moved() < dist:
-            print(f"error {moved} instead of {dist}")
-        else:
-            m.left(120)
-            m.move(dist)
-            m.left(120)
-            m.move(dist)
+    # adhoc function composition in python
+    # Mtriangle = montle.move(dist,
+    #                          montle.left(120,
+    #                               montle.move(dist,
+    #                                            montle.left(120,
+    #                                                         montle.move(dist)))))
 
-    # Exiting the with block actually run the monad actions
+    # we use with as a guarantee to cleanup our resource :
+    # our delegate implementation, outside of our functional design.
+    with montle.montle() as impl:
+        Mtriangle(impl)
 
 
 if __name__ == '__main__':
