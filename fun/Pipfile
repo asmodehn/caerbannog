@@ -8,6 +8,9 @@ verify_ssl = true
 [packages]
 hypothesis = "*"
 pytest = "*"
+click = "*"
+traitlets = "*"
+ipython = "*"
 
 [requires]
 python_version = "3.7"
